@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111518">
+  <meta name="description" content="Личная мастерская идей: собирай замыслы и отмечай прогресс. Локальное хранение с переносом резервной копии между устройствами.">
+  <title>IDEA DECK — мастерская идей</title>
+  <link rel="stylesheet" href="./styles.css?v=1.1">
+  <script src="./app.js?v=1.1" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержимому</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Боковая панель">
+      <a class="brand" href="#top" aria-label="IDEA DECK — обзор">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span><strong>IDEA DECK</strong><small>ЛИЧНАЯ МАСТЕРСКАЯ</small></span>
+      </a>
+
+      <div class="nav-label">МОЯ КОЛЛЕКЦИЯ</div>
+      <nav class="side-nav" aria-label="Фильтр идей">
+        <button class="nav-link is-active" type="button" data-view="all" aria-current="page"><span class="nav-icon icon-grid" aria-hidden="true"></span>Все идеи<span class="nav-count" id="totalCount">0</span></button>
+        <button class="nav-link" type="button" data-view="inbox"><span class="nav-icon icon-inbox" aria-hidden="true"></span>Входящие<span class="nav-count" id="inboxCount">0</span></button>
+        <button class="nav-link" type="button" data-view="active"><span class="nav-icon icon-active" aria-hidden="true"></span>В работе<span class="nav-count" id="activeCount">0</span></button>
+        <button class="nav-link" type="button" data-view="done"><span class="nav-icon icon-done" aria-hidden="true"></span>Готово<span class="nav-count" id="doneCount">0</span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="storage-card"><span class="storage-light" aria-hidden="true"></span><div><strong>Данные на устройстве</strong><small>Перенос через JSON-файл</small></div></div>
+        <p class="sidebar-note">Без аккаунта. Без облака.<br>Переноси идеи вручную.</p>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main">
+      <header class="topbar" id="top">
+        <div class="breadcrumb"><span class="breadcrumb-dot" aria-hidden="true"></span><span>МОЯ РАБОЧАЯ ОБЛАСТЬ</span><span class="breadcrumb-sep">/</span><span id="topViewLabel">ВСЕ ИДЕИ</span></div>
+        <div class="top-actions">
+          <label class="search-box"><span class="search-icon" aria-hidden="true"></span><span class="sr-only">Поиск идей</span><input id="searchInput" type="search" placeholder="Найти идею…" autocomplete="off"></label>
+          <div class="backup-actions">
+            <button class="icon-button backup-button desktop-export" id="exportBtn" type="button" title="Скачать резервную копию JSON" aria-label="Скачать резервную копию JSON"><span aria-hidden="true">↓</span></button>
+            <button class="icon-button backup-button" id="importBtn" type="button" title="Объединить идеи из JSON-файла" aria-label="Объединить идеи из резервной копии JSON"><span aria-hidden="true">↑</span></button>
+            <button class="icon-button backup-button mobile-share" id="shareBtn" type="button" title="Поделиться резервной копией" aria-label="Поделиться резервной копией JSON"><span aria-hidden="true">↗</span></button>
+            <input id="importFile" type="file" accept="application/json,.json" hidden>
+          </div>
+          <button class="primary-button" id="newIdeaBtn" type="button"><span class="plus" aria-hidden="true">+</span> Новая идея</button>
+        </div>
+      </header>
+
+      <div class="page-wrap">
+        <section class="welcome-row" aria-labelledby="pageTitle">
+          <div>
+            <div class="eyebrow"><span class="eyebrow-line"></span> ЛОВИ ИДЕИ. ДОВОДИ ДО ДЕЛА.</div>
+            <h1 id="pageTitle">Твоя мастерская<span>.</span></h1>
+            <p class="welcome-copy" id="pageSubtitle">Собирай мысли, выбирай следующий шаг и наблюдай, как задумки становятся реальнее.</p>
+          </div>
+          <div class="today-card"><span class="today-label">СЕГОДНЯ</span><strong id="todayDate">—</strong><span class="today-caption">ОДИН ШАГ ЗА РАЗ</span></div>
+        </section>
+
+        <section class="stats-row" aria-label="Сводка идей">
+          <article class="stat-card stat-total"><div class="stat-top"><span>ВСЕГО В КОЛЛЕКЦИИ</span><span class="stat-mark" aria-hidden="true">◈</span></div><strong class="stat-number" id="statTotal">0</strong><span class="stat-bottom">ИДЕИ СОХРАНЕНЫ ЛОКАЛЬНО</span></article>
+          <article class="stat-card"><div class="stat-top"><span>В РАБОТЕ</span><span class="stat-mark mint-mark" aria-hidden="true">↗</span></div><strong class="stat-number" id="statActive">0</strong><span class="stat-bottom">ИДЕИ СЛЕДУЮЩЕГО ШАГА</span></article>
+          <article class="stat-card"><div class="stat-top"><span>ШАГОВ ВЫПОЛНЕНО</span><span class="stat-mark blue-mark" aria-hidden="true">✓</span></div><strong class="stat-number" id="statSteps">0</strong><span class="stat-bottom">ОТМЕЧЕНО В ЧЕК-ЛИСТАХ</span></article>
+          <article class="stat-card stat-focus"><div class="stat-top"><span>ФОКУС</span><span class="focus-pulse" aria-hidden="true"></span></div><strong class="focus-word">Сделать<br>следующий шаг</strong><span class="stat-bottom">НЕ ОБЯЗАТЕЛЬНО ВЕСЬ ПРОЕКТ</span></article>
+        </section>
+
+        <section class="ideas-section" aria-labelledby="ideasTitle">
+          <div class="section-heading">
+            <div><div class="section-kicker">ТВОЯ КАРТОТЕКА</div><h2 id="ideasTitle">Идеи <span class="heading-count" id="visibleCount">0</span></h2></div>
+            <div class="sort-label">СНАЧАЛА НОВЫЕ <span aria-hidden="true">⌄</span></div>
+          </div>
+          <div class="idea-grid" id="ideaGrid" aria-live="polite"></div>
+          <div class="empty-state" id="emptyState" hidden>
+            <div class="empty-symbol" aria-hidden="true">＋</div>
+            <h3 id="emptyTitle">Пока здесь тихо</h3>
+            <p id="emptyCopy">Добавь первую мысль — необязательно знать весь план. Достаточно названия и следующего шага.</p>
+            <button class="secondary-button" id="emptyNewBtn" type="button">Создать идею <span aria-hidden="true">↗</span></button>
+          </div>
+        </section>
+
+        <footer class="main-footer"><span><i aria-hidden="true"></i> ЛОКАЛЬНОЕ СОХРАНЕНИЕ ВКЛЮЧЕНО</span><span>IDEA DECK <b>·</b> ВЕРСИЯ 1.1</span></footer>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="idea-dialog" id="ideaDialog" aria-labelledby="ideaDialogTitle">
+    <form class="dialog-form" id="ideaForm">
+      <div class="dialog-head"><div><div class="dialog-kicker">НОВАЯ ЗАПИСЬ</div><h2 id="ideaDialogTitle">Добавить идею</h2></div><button class="icon-button close-button" type="button" data-close-idea aria-label="Закрыть">×</button></div>
+      <input type="hidden" name="ideaId">
+      <label class="field-label">Название идеи<input name="title" required maxlength="90" placeholder="Например, умная мастерская…"></label>
+      <div class="field-row">
+        <label class="field-label">Направление<select name="category"><option value="tool">Инструмент</option><option value="app">Приложение</option><option value="game">Игра</option><option value="design">Дизайн</option><option value="research">Исследование</option><option value="other">Другое</option></select></label>
+        <label class="field-label">Приоритет<select name="priority"><option value="normal">Обычный</option><option value="high">Высокий</option><option value="low">Невысокий</option></select></label>
+      </div>
+      <label class="field-label">Этап<select name="status"><option value="inbox">Входящие</option><option value="active">В работе</option><option value="done">Готово</option></select></label>
+      <label class="field-label">Коротко о задумке<textarea name="summary" rows="2" maxlength="220" placeholder="Что это и почему хочется попробовать?"></textarea></label>
+      <label class="field-label">Подробности<textarea name="description" rows="4" placeholder="Запиши детали, ограничения и важный контекст…"></textarea></label>
+      <label class="field-label">Первые шаги <span class="field-hint">каждый шаг — с новой строки</span><textarea name="tasks" rows="3" placeholder="Проверить, что уже существует&#10;Собрать простой прототип"></textarea></label>
+      <div class="dialog-foot"><span class="dialog-hint">Сохранится в этом браузере</span><div><button class="secondary-button" type="button" data-close-idea>Отмена</button><button class="primary-button" type="submit">Сохранить идею</button></div></div>
+    </form>
+  </dialog>
+
+  <dialog class="detail-dialog" id="detailDialog" aria-label="Карточка идеи"><div class="detail-shell" id="detailContent"></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
